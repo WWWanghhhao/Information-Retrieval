@@ -1,18 +1,31 @@
 # Information-Retrieval
 
+## Project Introduction
+This project is an information retrieval system that primarily sources data from the Nankai University News Network. The web interface is built using Flask, a lightweight Python web framework.
+
+## Features
+- **Data Collection**: Web scraping capabilities to gather data from specified sources.
+- **Content Extraction**: Extracts and processes text content from web pages.
+- **Search Functionality**: Employs an inverted index and TF-IDF weighting model to deliver search results.
+- **Web Interface**: User-friendly web interface built with Flask for easy interaction.
+
+
+
+## Project Structure
 ```
-src/                    # 源代码目录
-├── get_data.py         # 爬取网页（主方法）
-├── get_data2.py        # 爬取网页（备用方法）
-├── add_content.py      # 提取网页内容
-├── extract_links.py    # 提取网页超链接
-├── get_token.py        # 分词处理
-├── get_tfidf.py        # 计算 TF-IDF
-├── get_page_rank.py    # 计算 PageRank
-├── search.py           # 搜索功能实现
-├── app.py              # Web 后端主程序
-└── templates/          # 前端模板目录
-    ├── history.html        # 搜索历史页面
-    ├── index.html          # 主页
-    └── search_result.html  # 搜索结果页面
+src/
+├── get_data.py         # Web scraping (primary method)
+├── get_data2.py        # Web scraping (backup method)
+├── add_content.py      # Extract web page content
+├── extract_links.py    # Extract web page hyperlinks
+├── get_token.py        # Word segmentation processing
+├── get_tfidf.py        # Calculate TF-IDF
+├── get_page_rank.py    # Calculate PageRank
+├── search.py           # Search feature implementation
+├── app.py              # Web backend main program
+└── templates/          # Frontend template directory
+    ├── history.html    # Search history page
+    ├── index.html      # Homepage
+    └── search_result.html # Search results page
 ```
+
