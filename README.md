@@ -6,7 +6,13 @@ This project is an information retrieval system that primarily sources data from
 ## Features
 - **Data Collection**: Web scraping capabilities to gather data from specified sources.
 - **Content Extraction**: Extracts and processes text content from web pages.
-- **Search Functionality**: Employs an inverted index and TF-IDF weighting model to deliver search results.
+- **Search Functionality**:
+  - Employs an inverted index and TF-IDF weighting model to deliver search results.
+  - Supports document search, allowing users to retrieve specific documents based on keywords or phrases.
+  - Enables phrase search by matching the exact sequence of words in the query for more precise results.
+  - Allows wildcard searches using special characters to match patterns and find documents with word variations.
+  - Captures and stores web page snapshots for quick preview without reloading the page.
+  - Maintains a query log to record search queries and results, aiding in analyzing user behavior and optimizing performance.
 - **Web Interface**: User-friendly web interface built with Flask for easy interaction.
 
 
