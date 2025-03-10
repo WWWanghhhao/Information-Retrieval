@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search</title>
+    <style>
+        body {
+            font-size: 18px; /* 默认字体大小 */
+            line-height: 1.6; /* 行高 */
+            font-family: Arial, sans-serif; /* 字体类型 */
+            color: black; /* 文本颜色 */
+            display: flex; /* 使用 Flexbox 进行布局 */
+            justify-content: center; /* 水平居中 */
+            align-items: center; /* 垂直居中 */
+            height: 100vh; /* 视口高度 */
+            margin: 0; /* 去掉默认边距 */
+            text-align: center; /* 文本居中 */
+        }
+        h1 {
+            font-size: 28px; /* 主标题字体大小 */
+        }
+        label {
+            font-size: 18px; /* 标签字体大小 */
+        }
+        button {
+            font-size: 18px; /* 按钮字体大小 */
+            padding: 5px 10px; /* 按钮内边距 */
+        }
+        .button-container a {
+            font-size: 18px; /* 链接字体大小 */
+            margin-right: 10px; /* 链接之间的间距 */
+            text-decoration: none; /* 去掉链接下划线 */
+            color: black; /* 链接颜色 */
+        }
+        #search-input {
+            font-size: 18px; /* 输入框字体大小 */
+            padding: 10px; /* 增加输入框内边距 */
+            margin-bottom: 10px; /* 输入框与按钮间的间距 */
+            width: 300px; /* 设置输入框宽度 */
+            height: 20px; /* 设置输入框高度 */
+        }
+        #search-suggestions {
+            color: black; /* 建议列表文本颜色 */
+            text-align: left; /* 列表内容靠左对齐 */
+        }
+    </style>
+</head>
+<body>
+<div>
+    <h1>南开百事通</h1>
+<form action="/search" method="post" id="combined-form">
+    <span>域名范围：</span>
+    <label style="display: inline-block; margin-right: 10px;">
+        <input type="radio" name="from" value="nankai">仅南开域名
+    </label>
+    <label style="display: inline-block; margin-right: 10px;">
+        <input type="radio" name="from" value="other">所有域名
+    </label>
+    <br>
+    以下功能仅支持南开域名内搜索
+    <br>
+    <span>查询范围：</span>
+    <label style="display: inline-block; margin-right: 10px;">
+        <input type="radio" name="target" value="only_title">仅限标题
+    </label>
+    <label style="display: inline-block; margin-right: 10px;">
+        <input type="radio" name="target" value="only_description">仅限摘要
+    </label>
+    <label style="display: inline-block;">
+        <input type="radio" name="target" value="only_content">仅限内容
+    </label>
+    <br>
+
+    <span>时间限制：</span>
+    <label style="display: inline-block; margin-right: 10px;">
+        <input type="radio" name="limit" value="month">最近一月
+    </label>
+    <label style="display: inline-block; margin-right: 10px;">
+        <input type="radio" name="limit" value="year">最近一年
+    </label>
+    <label style="display: inline-block;">
+        <input type="radio" name="limit" value="total">不限时间
+    </label>
+    <br>
+
+    <input type="text" name="query" id="search-input" placeholder="输入搜索内容" required
+           oninput="suggestQueries()">
+
+    <button type="submit">搜索</button>
+    <br>
+</form>
+    <div id="search-suggestions">
+        <ul id="suggested-queries"></ul>
+    </div>
+
+    <div class="button-container">
+        <a href="/history" id="viewHistory">查看历史记录</a>
+        <a href="{{ url_for('new_session') }}">新建查询会话</a>
+    </div>
+</div>
+<script>
+    document.getElementById('combined-form').addEventListener('submit', function(event) {
+        var fromSelected = document.querySelector('input[name="from"]:checked');
+        var targetSelected = document.querySelector('input[name="target"]:checked');
+        var limitSelected = document.querySelector('input[name="limit"]:checked');
+        var queryInput = document.querySelector('input[name="query"]');
+
+        if (!fromSelected) {
+            alert('请确保选择所有必填项！');
+            event.preventDefault();  // 阻止表单提交
+        }
+        // 如果选择了 "other"，则不需要检查其他选项
+        if (fromSelected.value === 'other') {
+            if (!queryInput.value) {
+                alert('请输入搜索内容！');
+                event.preventDefault();  // 阻止表单提交
+            }
+            return;  // 如果选择了 "other"，直接返回
+        }
+
+        // 检查其他必填项
+        if (!targetSelected || !limitSelected || !queryInput.value || !fromSelected) {
+            alert('请确保选择所有必填项！');
+            event.preventDefault();  // 阻止表单提交
+        }
+    });
+</script>
+<script>
+    function suggestQueries() {
+        var query = document.getElementById('search-input').value;
+        fetch('/suggest?query=' + query)
+            .then(response => response.json())
+            .then(data => {
+                var suggestedQueries = document.getElementById('suggested-queries');
+                suggestedQueries.innerHTML = '';
+                data.forEach(function(q) {
+                    var li = document.createElement('li');
+                    li.textContent = q;
+                    li.addEventListener('click', function() {
+                        document.getElementById('search-input').value = q;
+                        document.getElementById('suggested-queries').innerHTML = '';
+                        document.getElementById('search-form').submit();
+                    });
+                    suggestedQueries.appendChild(li);
+                });
+            });
+    }
+</script>
+</body>
+</html>

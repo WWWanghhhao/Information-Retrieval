@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results</title>
+    <style>
+        body {
+            font-size: 16px; /* 默认字体大小 */
+            line-height: 1.5; /* 行高 */
+        }
+        h1 {
+            font-size: 24px; /* 主标题字体大小 */
+        }
+        h2 {
+            font-size: 20px; /* 副标题字体大小 */
+        }
+        .button-container {
+            margin-bottom: 20px; /* 增加按钮与内容之间的间距 */
+        }
+        #goBack, #viewHistory {
+            font-size: 18px; /* 按钮字体大小 */
+            margin-right: 10px; /* 按钮之间的间距 */
+            text-decoration: none; /* 去掉链接下划线 */
+            color: blue; /* 链接颜色 */
+        }
+        .result-item, .snapshot-item {
+            font-size: 18px; /* 搜索结果和快照项的字体大小 */
+        }
+        button {
+            font-size: 16px; /* 按钮字体大小 */
+            margin-top: 10px; /* 按钮与内容之间的间距 */
+        }
+        .hidden {
+            display: none; /* 隐藏超出范围的结果 */
+        }
+    </style>
+</head>
+<body>
+    <div class="button-container">
+        <a href="/" id="goBack">搜索</a>
+        <a href="/history" id="viewHistory">查看历史记录</a>
+    </div>
+
+    <h1>"{{ query }}" 的搜索结果</h1>
+    <ul id="resultList">
+        {% for result in search_result %}
+        <li class="result-item">{{ result[3] }} - <a href="{{ result[2] }}">{{ result[1] }}</a></li>
+        {% endfor %}
+    </ul>
+
+    <button id="loadMore" style="display: none;">加载更多</button>
+    <button id="collapse" style="display: none;">收起</button>
+
+    <h2>网页快照</h2>
+    <ul id="snapshotList">
+        {% for url in snapshot_urls %}
+            <li class="snapshot-item"><a href="{{ url }}">{{ url }}</a></li>
+        {% endfor %}
+    </ul>
+
+    <button id="loadMoreSnapshots" style="display: none;">加载更多快照</button>
+    <button id="collapseSnapshots" style="display: none;">收起快照</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 搜索结果部分
+            const items = document.querySelectorAll('.result-item');
+            const loadMoreButton = document.getElementById('loadMore');
+            const collapseButton = document.getElementById('collapse');
+
+            // 初始化，只显示前 20 条搜索结果
+            items.forEach((item, index) => {
+                if (index >= 20) {
+                    item.classList.add('hidden'); // 隐藏超出范围的项
+                }
+            });
+
+            // 显示“加载更多”按钮
+            if (items.length > 20) {
+                loadMoreButton.style.display = 'block';
+            }
+
+            // 加载更多结果
+            loadMoreButton.addEventListener('click', function() {
+                items.forEach((item) => {
+                    item.classList.remove('hidden'); // 显示所有项
+                });
+                loadMoreButton.style.display = 'none'; // 隐藏按钮
+                collapseButton.style.display = 'block'; // 显示收起按钮
+            });
+
+            // 收起结果
+            collapseButton.addEventListener('click', function() {
+                items.forEach((item, index) => {
+                    if (index >= 20) {
+                        item.classList.add('hidden'); // 隐藏超出范围的项
+                    }
+                });
+                loadMoreButton.style.display = 'block'; // 显示加载更多按钮
+                collapseButton.style.display = 'none'; // 隐藏收起按钮
+            });
+
+            // 网页快照部分
+            const snapshotItems = document.querySelectorAll('.snapshot-item');
+            const loadMoreSnapshotsButton = document.getElementById('loadMoreSnapshots');
+            const collapseSnapshotsButton = document.getElementById('collapseSnapshots');
+
+            // 初始化，只显示前 5 条快照
+            snapshotItems.forEach((item, index) => {
+                if (index >= 5) {
+                    item.classList.add('hidden'); // 隐藏超出范围的项
+                }
+            });
+
+            // 显示“加载更多快照”按钮
+            if (snapshotItems.length > 5) {
+                loadMoreSnapshotsButton.style.display = 'block';
+            }
+
+            // 加载更多快照
+            loadMoreSnapshotsButton.addEventListener('click', function() {
+                snapshotItems.forEach((item) => {
+                    item.classList.remove('hidden'); // 显示所有项
+                });
+                loadMoreSnapshotsButton.style.display = 'none'; // 隐藏按钮
+                collapseSnapshotsButton.style.display = 'block'; // 显示收起按钮
+            });
+
+            // 收起快照
+            collapseSnapshotsButton.addEventListener('click', function() {
+                snapshotItems.forEach((item, index) => {
+                    if (index >= 5) {
+                        item.classList.add('hidden'); // 隐藏超出范围的项
+                    }
+                });
+                loadMoreSnapshotsButton.style.display = 'block'; // 显示加载更多按钮
+                collapseSnapshotsButton.style.display = 'none'; // 隐藏收起按钮
+            });
+        });
+    </script>
+</body>
+</html>

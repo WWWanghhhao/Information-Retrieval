@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search History</title>
+</head>
+<body>
+    <h1>查询历史</h1>
+    {% if not empty %}
+        {% for k, v in map.items() %}
+            <h3>会话 {{ k }}</h3>
+            <ul>
+                    {% for word in v.split() %}
+                <li>{{ word }}</li>
+                {% endfor %}
+            </ul>
+        <a href="{{ url_for('switch_session', session_id=k) }}">切换到此会话</a>
+        {% endfor %}
+        <h3>当前会话 {{current}} </h3>
+    {% else %}
+        <h3>这里空空如也...</h3>
+    {% endif %}
+    <a href="/">返回搜索页面</a>
+    <a href="{{ url_for('new_session') }}">新建查询会话</a>
+    <a href="/clear_history">清理查询历史</a>
+</body>
+</html>
